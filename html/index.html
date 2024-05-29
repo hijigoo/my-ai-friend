@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Coding School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+
+  <style>
+
+
+      .title-top {
+          color: #4285f4;
+          font-size: 36px;
+          margin-bottom: 0 !important;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .title-bottom {
+          color: #4285f4;
+          font-size: 36px;
+          margin-top: 10px !important;
+          margin-bottom: 30px;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .container {
+
+          max-width: 400px;
+          /*margin: 100px auto;*/
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          padding: 30px;
+
+          position: absolute;
+          top: 50%; /* 세로 중앙 정렬을 위한 위치 설정 */
+          left: 50%; /* 가로 중앙 정렬을 위한 위치 설정 */
+          transform: translate(-50%, -50%); /* 요소 자체의 크기만큼 위쪽과 왼쪽으로 이동 */
+      }
+
+      h1 {
+          color: #4285f4;
+          font-size: 36px;
+          margin-bottom: 30px;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      input {
+          width: 280px;
+          padding: 10px 10px;
+      }
+
+      input[type="text"] {
+
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+          margin-bottom: 20px;
+      }
+
+      button {
+          width: 300px;
+          background-color: #34a853;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          font-size: 18px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+          background-color: #2e9549;
+      }
+
+      body {
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+          color: #333;
+          text-align: center;
+          padding-top: 50px;
+          margin: 0px;
+      }
+
+      /*body {*/
+      /*    background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 30%, #FFFFFF 70%, #FFFFFF 100%);*/
+      /*    height: 100vh;*/
+      /*    overflow: hidden;*/
+      /*}*/
+
+
+      body {
+          background: #00b4ff;
+          color: #333;
+          font: 100% Arial, Sans Serif;
+          height: 100vh;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+      }
+
+      #background-wrap {
+          bottom: 0;
+          left: 0;
+          padding-top: 50px;
+          position: fixed;
+          right: 0;
+          top: 0;
+          z-index: -1;
+      }
+
+      /* KEYFRAMES */
+
+      @-webkit-keyframes animateCloud {
+          0% {
+              margin-left: -1000px;
+          }
+          100% {
+              margin-left: 100%;
+          }
+      }
+
+      @-moz-keyframes animateCloud {
+          0% {
+              margin-left: -1000px;
+          }
+          100% {
+              margin-left: 100%;
+          }
+      }
+
+      @keyframes animateCloud {
+          0% {
+              margin-left: -1000px;
+          }
+          100% {
+              margin-left: 100%;
+          }
+      }
+
+      /* ANIMATIONS */
+
+      .x1 {
+          -webkit-animation: animateCloud 35s linear infinite;
+          -moz-animation: animateCloud 35s linear infinite;
+          animation: animateCloud 35s linear infinite;
+
+          -webkit-transform: scale(0.65);
+          -moz-transform: scale(0.65);
+          transform: scale(0.65);
+      }
+
+      .x2 {
+          -webkit-animation: animateCloud 20s linear infinite;
+          -moz-animation: animateCloud 20s linear infinite;
+          animation: animateCloud 20s linear infinite;
+
+          -webkit-transform: scale(0.3);
+          -moz-transform: scale(0.3);
+          transform: scale(0.3);
+      }
+
+      .x3 {
+          -webkit-animation: animateCloud 30s linear infinite;
+          -moz-animation: animateCloud 30s linear infinite;
+          animation: animateCloud 30s linear infinite;
+
+          -webkit-transform: scale(0.5);
+          -moz-transform: scale(0.5);
+          transform: scale(0.5);
+      }
+
+      .x4 {
+          -webkit-animation: animateCloud 18s linear infinite;
+          -moz-animation: animateCloud 18s linear infinite;
+          animation: animateCloud 18s linear infinite;
+
+          -webkit-transform: scale(0.4);
+          -moz-transform: scale(0.4);
+          transform: scale(0.4);
+      }
+
+      .x5 {
+          -webkit-animation: animateCloud 25s linear infinite;
+          -moz-animation: animateCloud 25s linear infinite;
+          animation: animateCloud 25s linear infinite;
+
+          -webkit-transform: scale(0.55);
+          -moz-transform: scale(0.55);
+          transform: scale(0.55);
+      }
+
+      /* OBJECTS */
+
+      .cloud {
+          background: #fff;
+          background: -moz-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(5%, #fff), color-stop(100%, #f1f1f1));
+          background: -webkit-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+          background: -o-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+          background: -ms-linear-gradient(top, #fff 5%, #f1f1f1 100%);
+          background: linear-gradient(top, #fff 5%, #f1f1f1 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#f1f1f1', GradientType=0);
+
+          -webkit-border-radius: 100px;
+          -moz-border-radius: 100px;
+          border-radius: 100px;
+
+          -webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+          -moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+
+          height: 120px;
+          position: relative;
+          width: 350px;
+      }
+
+      .cloud:after, .cloud:before {
+          background: #fff;
+          content: '';
+          position: absolute;
+          z-indeX: -1;
+      }
+
+      .cloud:after {
+          -webkit-border-radius: 100px;
+          -moz-border-radius: 100px;
+          border-radius: 100px;
+
+          height: 100px;
+          left: 50px;
+          top: -50px;
+          width: 100px;
+      }
+
+      .cloud:before {
+          -webkit-border-radius: 200px;
+          -moz-border-radius: 200px;
+          border-radius: 200px;
+
+          width: 180px;
+          height: 180px;
+          right: 50px;
+          top: -90px;
+      }
+
+      .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 9998;
+          display: none;
+      }
+
+      .popup {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+          z-index: 9999;
+          display: none;
+      }
+
+      .popup button {
+          margin-top: 10px;
+      }
+
+      .welcome-message {
+          color: black;
+      }
+  </style>
+</head>
+
+<body>
+
+<div id="background-wrap">
+  <div class="x1">
+    <div class="cloud"></div>
+  </div>
+
+  <div class="x2">
+    <div class="cloud"></div>
+  </div>
+
+  <div class="x3">
+    <div class="cloud"></div>
+  </div>
+
+  <div class="x4">
+    <div class="cloud"></div>
+  </div>
+
+  <div class="x5">
+    <div class="cloud"></div>
+  </div>
+</div>
+
+<div class="overlay"></div>
+<div class="popup">
+  <h1 class="welcome-message" style="margin-bottom: 0px;">Welcome To</h1>
+  <h1 class="welcome-message" style="margin-top: 10px;">AWS Coding School 2024</h1>
+  <button id="closeBtn">확인</button>
+</div>
+
+<div class="container">
+  <h1 class="title-top">나만의 인공지능</h1>
+  <h1 class="title-bottom">친구를 만들어 보자!</h1>
+  <input id="input-id" type="text" placeholder="고유 ID 입력 (이름-생일)"><br>
+  <button id="submit-button">나만의 인공지능 친구 만들기</button>
+</div>
+
+</body>
+
+<script>
+
+    const inputElement = document.getElementById('input-id');
+    const submitButton = document.getElementById('submit-button');
+
+    function getId() {
+        // URL에서 쿼리스트링 부분만 가져오기
+        let queryString = window.location.search;
+        let params = new URLSearchParams(queryString);
+        return params.get('id');
+    }
+
+    let id = getId()
+    inputElement.value = id
+
+    inputElement.addEventListener('input', function () {
+        inputElement.style.border = '1px solid #ccc'; // 기본 테두리 스타일
+    });
+
+    submitButton.addEventListener('click', function () {
+        const inputElement = document.getElementById('input-id');
+        const inputValue = inputElement.value.trim();
+
+
+        if (inputValue === '') {
+            inputElement.style.border = '2px solid red';
+        } else {
+            inputElement.style.border = ''; // 입력값이 있으면 테두리 스타일 초기화
+            window.location.href = 'ai-image.html?id=' + inputValue;
+        }
+    });
+
+    // 팝업 닫기 (버튼 클릭 시)
+    document.getElementById('closeBtn').addEventListener('click', function () {
+        var overlay = document.querySelector('.overlay');
+        var popup = document.querySelector('.popup');
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+    });
+</script>
+</html>
+
