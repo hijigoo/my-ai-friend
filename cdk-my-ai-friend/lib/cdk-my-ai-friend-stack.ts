@@ -11,12 +11,29 @@ const stage = 'dev';
 
 const pythonRuntimeVersion = lambda.Runtime.PYTHON_3_11
 const architecture = lambda.Architecture.X86_64
+
 export class CdkMyAiFriendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // 0. Lambda 함수 생성
-    // 0-1. Lambda 함수에서 필요한 라이브러리를 포함하는 Lambda Layer 생성
+    // 0-1. Lambda 롤 생성
+    const lambdaRole = new iam.Role(this, 'LambdaRole', {
+      roleName: `${projectName}-lambda-role`,
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+      ],
+    });
+
+    lambdaRole.addToPolicy(
+      new iam.PolicyStatement({  // policy statement for bedrock
+        resources: ['*'],
+        actions: ['bedrock:*'],
+      })
+    );
+
+    // 0-2. Lambda 함수에서 필요한 라이브러리를 포함하는 Lambda Layer 생성
     const packageLayer = new lambda.LayerVersion(this, `${projectName}-package-layer`, {
       code: lambda.Code.fromAsset('../package-layer/package-layer.zip'),
       layerVersionName: `${projectName}-package-layer`,
@@ -25,48 +42,52 @@ export class CdkMyAiFriendStack extends cdk.Stack {
       description: 'Lambda package layer for Lambda functions',
     });
 
-    // 0-2. 채팅을 위한 Lambda Function 생성
+    // 0-3. 채팅을 위한 Lambda Function 생성
     const lambdaChat = new lambda.Function(this, `${projectName}-chat`, {
       functionName: `${projectName}-chat`,
       runtime: pythonRuntimeVersion,
       architecture: architecture,
       handler: "lambda_function.lambda_handler",
+      role: lambdaRole,
       code: lambda.Code.fromAsset('../lambda-chat'),
       timeout: cdk.Duration.minutes(15),
       description: "lambda function to chat",
       layers: [packageLayer],
     });
 
-    // 0-3. 이미지 생성하는 Lambda Function 생성
+    // 0-4. 이미지 생성하는 Lambda Function 생성
     const lambdaImageGenerator = new lambda.Function(this, `${projectName}-image-generate`, {
       functionName: `${projectName}-image-generate`,
       runtime: pythonRuntimeVersion,
       architecture: architecture,
       handler: "lambda_function.lambda_handler",
+      role: lambdaRole,
       code: lambda.Code.fromAsset('../lambda-image-generate'),
       timeout: cdk.Duration.minutes(15),
       description: "lambda function to generate image",
       layers: [packageLayer],
     });
 
-    // 0-4. 사용자 정보 업데이트 하는 Lambda Function 생성
+    // 0-5. 사용자 정보 업데이트 하는 Lambda Function 생성
     const lambdaInfoUpdate = new lambda.Function(this, `${projectName}-info-update`, {
       functionName: `${projectName}-info-update`,
       runtime: pythonRuntimeVersion,
       architecture: architecture,
       handler: "lambda_function.lambda_handler",
+      role: lambdaRole,
       code: lambda.Code.fromAsset('../lambda-info-update'),
       timeout: cdk.Duration.minutes(15),
       description: "lambda function to update user info",
       layers: [packageLayer],
     });
 
-    // 0-5. 사용자 정보를 요약 하는 Lambda Function 생성
+    // 0-6. 사용자 정보를 요약 하는 Lambda Function 생성
     const lambdaSummary = new lambda.Function(this, `${projectName}-summary`, {
       functionName: `${projectName}-summary`,
       runtime: pythonRuntimeVersion,
       architecture: architecture,
       handler: "lambda_function.lambda_handler",
+      role: lambdaRole,
       code: lambda.Code.fromAsset('../lambda-summary'),
       timeout: cdk.Duration.minutes(15),
       description: "lambda function to summary user info",
