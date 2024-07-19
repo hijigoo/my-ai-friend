@@ -15,9 +15,6 @@ s3 = boto3.client('s3')
 model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
 
 
-# model_id = "anthropic.claude-3-haiku-20240307-v1:0"
-
-
 def get_llm(max_tokens=512, temperature=1, top_k=250, top_p=1):
     model_kwargs = {
         "max_tokens": max_tokens,
@@ -218,4 +215,3 @@ AI: {prev_answer}
         },
         'body': json.dumps(result, ensure_ascii=False)
     }
-

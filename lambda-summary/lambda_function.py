@@ -1,7 +1,4 @@
 import json
-import os
-import io
-import base64
 import boto3
 from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage
@@ -13,9 +10,6 @@ boto3_bedrock = boto3.client('bedrock-runtime')
 s3 = boto3.client('s3')
 
 model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
-
-
-# model_id = "anthropic.claude-3-haiku-20240307-v1:0"
 
 
 def get_llm(max_tokens=512, temperature=0.8, top_k=125, top_p=1):
@@ -128,5 +122,3 @@ ai 가 사용자에게 자신을 소개하는 문장을 모두 한글로 만들�
         },
         'body': json.dumps(result, ensure_ascii=False)
     }
-
-
