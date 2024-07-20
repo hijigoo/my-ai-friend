@@ -1,11 +1,12 @@
 # AWS CDK 설정
 [Getting started with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
+```
 npm -g install typescript
 npm install -g aws-cdk
 cdk --version
-
 cdk bootstrap aws://123456789012/us-east-1
+```
 
 # CDK로 배포 하기
 ```
