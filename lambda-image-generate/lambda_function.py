@@ -11,6 +11,12 @@ import random
 # S3 클라이언트 생성
 s3 = boto3.client('s3')
 
+# Image 생성을 위한 Model Id 선언
+image_model_id = os.environ.get('imageModelId')
+
+# Bucket 이름 선언
+bucket_name = os.environ.get('assetsBucketName')
+
 
 def save_image(image, path):
     # Save
@@ -42,9 +48,7 @@ def invoke_stable_diffusion(prompt, seed, style_preset=None):
         # For the format, ranges, and available style_presets of Stable Diffusion models refer to:
         # https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-stability-diffusion.html
 
-        region_name = ["us-west-2", "us-east-1"]
-        selected_region = random.choice(region_name)
-
+        selected_region = os.environ['AWS_REGION']
         boto3_bedrock = boto3.client(
             'bedrock-runtime',
             region_name=selected_region
@@ -61,7 +65,7 @@ def invoke_stable_diffusion(prompt, seed, style_preset=None):
             body["style_preset"] = style_preset
 
         response = boto3_bedrock.invoke_model(
-            modelId="stability.stable-diffusion-xl-v1", body=json.dumps(body)
+            modelId=image_model_id, body=json.dumps(body)
         )
 
         response_body = json.loads(response["body"].read())
@@ -77,12 +81,8 @@ def invoke_stable_diffusion(prompt, seed, style_preset=None):
 def lambda_handler(event, context):
     id = event["queryStringParameters"]['id']
     prompt = event["queryStringParameters"]['prompt']
-    style = event["queryStringParameters"]['style']
 
-    img_b64 = invoke_stable_diffusion(prompt, 0, style)
-
-    # 업로드할 파일 경로
-    bucket_name = 'coding-school-2024'
+    img_b64 = invoke_stable_diffusion(prompt, 0)
 
     # 파일이름
     filename = f'{id}_image.png'
@@ -134,7 +134,6 @@ def lambda_handler(event, context):
 
     ####################################
 
-
     result = {
         "url": file_url,
         "prompt": prompt
@@ -151,5 +150,3 @@ def lambda_handler(event, context):
         },
         'body': json.dumps(result, ensure_ascii=False)
     }
-
-

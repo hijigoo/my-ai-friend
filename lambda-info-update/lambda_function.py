@@ -1,4 +1,4 @@
-import json
+import os
 import json
 import boto3
 from botocore.exceptions import ClientError
@@ -6,6 +6,8 @@ from botocore.exceptions import ClientError
 # S3 클라이언트 생성
 s3 = boto3.client('s3')
 
+# Bucket 이름 선언
+bucket_name = os.environ.get('assetsBucketName')
 
 def update_if_exist(event, key, data):
     if 'queryStringParameters' in event:
@@ -29,8 +31,7 @@ def lambda_handler(event, context):
     # id 가져오기
     id = event["queryStringParameters"]['id']
 
-    # S3 버킷 이름과 파일 경로 설정
-    bucket_name = 'coding-school-2024'
+    # S3 파일 경로 설정
     file_key = f'info/{id}_info.json'
 
     json_data = {}
