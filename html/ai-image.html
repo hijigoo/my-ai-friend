@@ -466,7 +466,7 @@
             const inputValue = inputElement.value.trim();
 
             console.log("Start Generate Image")
-            imageElement.src = "/data/loading1.gif"
+            imageElement.src = "/default/data/loading1.gif"
             const imageUrl = "/default/api/lambda-image-generate?id="+id+"&prompt="+inputValue;
             fetch(imageUrl)
                 .then(response => {

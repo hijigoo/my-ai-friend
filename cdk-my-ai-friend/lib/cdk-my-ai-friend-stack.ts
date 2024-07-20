@@ -46,11 +46,16 @@ export class CdkMyAiFriendStack extends cdk.Stack {
     assetsBucket.grantReadWrite(executeRole);
 
 
-    // 2. HTML 파일업로드
+    // 2. HTML, Data 파일업로드
     new s3Deployment.BucketDeployment(this, `${projectName}-deploy-html-files`, {
       sources: [s3Deployment.Source.asset('./../html')],
       destinationBucket: assetsBucket,
       destinationKeyPrefix: "html/"
+    });
+    new s3Deployment.BucketDeployment(this, `${projectName}-deploy-data-files`, {
+      sources: [s3Deployment.Source.asset('./../data')],
+      destinationBucket: assetsBucket,
+      destinationKeyPrefix: "data/"
     });
 
 
