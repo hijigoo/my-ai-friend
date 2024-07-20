@@ -163,9 +163,6 @@ export class CdkMyAiFriendStack extends cdk.Stack {
       binaryMediaTypes: ['*/*'],
       deployOptions: {
         stageName: stage,
-      },
-      defaultCorsPreflightOptions: {
-        allowOrigins: apiGateway.Cors.ALL_ORIGINS
       }
     });
 
