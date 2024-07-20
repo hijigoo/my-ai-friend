@@ -467,8 +467,7 @@
 
             console.log("Start Generate Image")
             imageElement.src = "/data/loading1.gif"
-            const imageUrl = "/api/lambda-image-generate?id="+id+"&prompt="
-                + inputValue + "&style=";
+            const imageUrl = "/default/api/lambda-image-generate?id="+id+"&prompt="+inputValue;
             fetch(imageUrl)
                 .then(response => {
                     return response.json()

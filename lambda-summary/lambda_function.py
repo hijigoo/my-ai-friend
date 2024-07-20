@@ -1,7 +1,5 @@
-import json
 import os
-import io
-import base64
+import json
 import boto3
 from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage
@@ -12,11 +10,11 @@ boto3_bedrock = boto3.client('bedrock-runtime')
 # S3 클라이언트 생성
 s3 = boto3.client('s3')
 
-model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
+# 모델 Id 선언
+model_id = os.environ.get('modelId')
 
-
-# model_id = "anthropic.claude-3-haiku-20240307-v1:0"
-
+# Bucket 이름 선언
+bucket_name = os.environ.get('assetsBucketName')
 
 def get_llm(max_tokens=512, temperature=0.8, top_k=125, top_p=1):
     model_kwargs = {
@@ -28,8 +26,7 @@ def get_llm(max_tokens=512, temperature=0.8, top_k=125, top_p=1):
     }
 
     # Sonnet
-    region_name = ["us-west-2", "us-east-1", "ap-southeast-2", "eu-west-3"]
-    selected_region = random.choice(region_name)
+    selected_region = os.environ['AWS_REGION']
     print(f"Selected region is {selected_region}")
 
     return ChatBedrock(
@@ -59,8 +56,7 @@ def get_info(id):
     file_key = f'info/{id}_info.json'
     try:
 
-        # S3 버킷 이름과 파일 경로 설정
-        bucket_name = 'coding-school-2024'
+        # S3 파일 경로 설정
         s3.head_object(Bucket=bucket_name, Key=file_key)
         print(f"{file_key} 파일이 {bucket_name} 버킷에 존재합니다.")
 
@@ -128,5 +124,3 @@ ai 가 사용자에게 자신을 소개하는 문장을 모두 한글로 만들�
         },
         'body': json.dumps(result, ensure_ascii=False)
     }
-
-

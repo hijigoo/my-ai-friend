@@ -1,0 +1,6 @@
+langchain==0.2.0
+langchain_aws==0.1.4
+pillow==10.3.0
+orjson==3.10.6
+pydantic-core==2.18.2
+numpy==1.26.4
