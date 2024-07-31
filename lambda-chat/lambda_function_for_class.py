@@ -1,4 +1,3 @@
-import os
 import io
 import json
 import boto3
@@ -9,10 +8,10 @@ from langchain_core.messages import HumanMessage
 s3 = boto3.client('s3')
 
 # 모델 Id 선언
-model_id = os.environ.get('modelId')
+model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
 
 # Bucket 이름 선언
-bucket_name = os.environ.get('assetsBucketName')
+bucket_name = "my-ai-friend-bucket-0122"
 
 
 def get_info(file_key):
