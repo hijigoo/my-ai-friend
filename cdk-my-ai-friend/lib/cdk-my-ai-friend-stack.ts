@@ -375,6 +375,11 @@ export class CdkMyAiFriendStack extends cdk.Stack {
       ],
     });
 
+    new cdk.CfnOutput(this, 'Webpage URL', {
+      value: restApi.url + "html/index.html",
+      description: 'Webpage URL',
+    });
+
     // 4-8. S3에서 사용자 정보를가져오기 위한 API 설정
     const apiInfo = restApi.root.addResource('info')
     const apiInfoObject = apiInfo.addResource('{object}')
