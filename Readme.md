@@ -10,7 +10,8 @@ cdk bootstrap aws://123456789012/us-east-1
 
 # CDK로 배포 하기
 ```
-cd ../cdk-my-ai-friend
+cd cdk-my-ai-friend
+npm i aws-cdk-lib
 cdk deploy
 ```
 

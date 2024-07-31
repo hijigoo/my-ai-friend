@@ -7,31 +7,29 @@ from langchain_core.messages import HumanMessage
 # S3 클라이언트 생성
 s3 = boto3.client('s3')
 
-# 모델 Id 선언
+# 모델 ID 선언
 model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
 
 # Bucket 이름 선언
-bucket_name = "my-ai-friend-bucket-0122"
+bucket_name = "my-ai-friend-bucket-0410"
 
 
 def get_info(file_key):
     json_data = {}
 
     try:
-        # S3 파일 경로 설정
+        # S3 파일 유무 확인
         s3.head_object(Bucket=bucket_name, Key=file_key)
-        print(f"{file_key} 파일이 {bucket_name} 버킷에 존재합니다.")
+        print(f"{file_key}파일이 {bucket_name} 버킷에 존재합니다")
 
-        # S3에서 JSON 파일 읽기
+        # S3 에서 JSON 파일 읽기
         response = s3.get_object(Bucket=bucket_name, Key=file_key)
         json_data = json.loads(response['Body'].read())
-
     except s3.exceptions.ClientError as e:
         # 404 에러가 발생하면 파일이 없는 것
-        if e.response['Error']['Code'] == '404':
-            print(f"{file_key} 파일이 {bucket_name} 버킷에 없습니다.")
+        if e.response["Error"]["code"] == "404":
+            print(f"{file_key}파일이 {bucket_name} 버킷에 존재하지 않습니다")
         else:
-            # 다른 에러가 발생한 경우 예외 처리
             print(f"에러 발생: {e}")
     return json_data
 
@@ -40,31 +38,26 @@ def get_history(file_key):
     text_data = ""
 
     try:
-        # S3 버킷 이름과 파일 경로 설정
+        # S3 파일 유무 확인
         s3.head_object(Bucket=bucket_name, Key=file_key)
-        print(f"{file_key} 파일이 {bucket_name} 버킷에 존재합니다.")
+        print(f"{file_key}파일이 {bucket_name} 버킷에 존재합니다")
 
-        # S3에서 JSON 파일 읽기
-        response_body = s3.get_object(Bucket=bucket_name, Key=file_key)
-        file_content = response_body['Body'].read().decode('utf-8')
-
-        # 파일 내용 출력
-        print(file_content)
+        # S3 에서 JSON 파일 읽기
+        response = s3.get_object(Bucket=bucket_name, Key=file_key)
+        file_content = json.loads(response['Body'].read())
 
         stream = io.StringIO(file_content)
         lines = stream.readlines()
 
-        # 마지막 5줄 출력
+        # 마지막 5턴 출력
         num_lines = min(10, len(lines))
         for line in lines[-num_lines:]:
             text_data = text_data + line.strip() + "\n"
-
     except s3.exceptions.ClientError as e:
         # 404 에러가 발생하면 파일이 없는 것
-        if e.response['Error']['Code'] == '404':
-            print(f"{file_key} 파일이 {bucket_name} 버킷에 없습니다.")
+        if e.response["Error"]["code"] == "404":
+            print(f"{file_key}파일이 {bucket_name} 버킷에 존재하지 않습니다")
         else:
-            # 다른 에러가 발생한 경우 예외 처리
             print(f"에러 발생: {e}")
     return text_data
 
@@ -99,19 +92,16 @@ Current conversation:
 생성하는 응답중에 영어는 모두 한글로 번역하고해줘. 대답할 때 태그는 모두 제외해줘.
 대답은 모두 한 줄로 많이 짧게 해줘.
 """
-    return prompt
 
 
 def invoke_llm(prompt):
     llm = ChatBedrock(
         model_id=model_id,
-        streaming=False,
         model_kwargs={
             "max_tokens": 512,
             "temperature": 1,
             "top_k": 250,
-            "top_p": 1,
-            "stop_sequences": ["\n\nHuman"],
+            "top_p": 1
         }
     )
 
@@ -122,57 +112,43 @@ def invoke_llm(prompt):
     ]
 
     result = llm.invoke(messages)
-
     return result.content
 
 
 def update_history(file_key, answer, history, query):
-    # Make history
+    # 이번 대화 내역 만들기
     prev_query = query
     prev_answer = answer
     next_history = f"""Human: {prev_query}
 AI: {prev_answer}
 """
-    # Save history
+
+    # 전체 대화 내역 저장하기
     next_history = history + next_history
     s3.put_object(Body=next_history, Bucket=bucket_name, Key=file_key)
-    print(f"JSON 파일이 {file_key} 경로에 성공적으로 업데이트되었습니다.")
 
 
 def lambda_handler(event, context):
-    id = event["queryStringParameters"]['id']
-    query = event["queryStringParameters"]['query']
+    id = event["queryStringParameters"]["id"]
+    query = event["queryStringParameters"]["query"]
 
-    if query.strip() == 'DELETE HISTORY':
-        file_key = f'info/{id}_history.txt'
-        s3.put_object(Body="", Bucket=bucket_name, Key=file_key)
-        return {
-            'statusCode': 200,
-            'headers': {
-                "Content-Type": "application/json; charset=UTF-8",
-                "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "*",
-                "X-Requested-With": "*"
-            },
-            'body': 'DELETE'
-        }
+    # 사용자 및 AI 정보 가져오기
+    info = get_info(file_key=f"info/{id}_info.json")
 
-    # Read info file
-    info = get_info(f'info/{id}_info.json')
+    # 대화내역 가져오기
+    history = get_history(file_key=f"info/{id}_history.txt")
 
-    # Read history file
-    history = get_history(f'info/{id}_history.txt')
+    # 프롬프트 생성하기
+    prompt = create_prompt(info=info, history=history, query=query)
 
-    # Create Prompt
-    prompt = create_prompt(info, history, query)
+    # 응답 요청하기
+    answer = invoke_llm(prompt=prompt)
 
-    # Get answer
-    answer = invoke_llm(prompt)
+    # 대화내역 업데이트하기
+    update_history(file_key=f"info/{id}_history.txt", answer=answer,
+                   history=history, query=query)
 
-    # Update History
-    update_history(f'info/{id}_history.txt', answer, history, query)
-
+    # 반환 객체 생성하기
     result = {
         "answer": answer,
         "query": query,
@@ -187,5 +163,6 @@ def lambda_handler(event, context):
             "Access-Control-Allow-Methods": "*",
             "X-Requested-With": "*"
         },
-        'body': json.dumps(result, ensure_ascii=False)
+        "body": json.dumps(result, ensure_ascii=False)
     }
+
