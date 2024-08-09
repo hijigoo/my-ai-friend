@@ -1,4 +1,56 @@
-# AWS CDK 설정
+# 나만의 AI 친구 만들기
+
+----
+## Application
+
+사용자가 자신만의 AI 캐릭터를 만들어 다양한 주제로 대화할 수 있는 애플리케이션입니다. 사용자는 AI의 외형, 성격, 특징 등을 자유롭게 설정할 수 있으며, AI는 사용자의 관심사와 선호도를 반영하여 개인화된 대화를 제공합니다. 또한 다양한 AI 캐릭터를 생성하고 설정을 변경할 수 있어 창의적인 상호작용이 가능합니다.
+
+![product-screenshot](https://github.com/user-attachments/assets/78610593-f1df-48ae-83f1-a27fc67969b1)
+![product-screenshot](https://github.com/user-attachments/assets/49a84352-63bc-4f8e-85de-d8044348d63d)
+
+## Architecture
+
+### 정적 웹호스팅 & 데이터 관리
+사용자는 Amazon API Gateway를 통해 Amazon S3에서 호스팅되는 웹사이트에 접근할 수 있습니다.
+
+![architecture](https://github.com/user-attachments/assets/500f6602-9c8a-4558-ac40-1b72e790e8d4)
+
+- Amazon API Gateway: 개발자가 API를 생성, 배포, 유지 관리할 수 있는 완전 관리형 서비스입니다. 백엔드 서비스와의 통신을 쉽게 설정하고, 트래픽 관리, 인증 및 권한 부여, 모니터링 등의 기능을 제공합니다.
+- Amazon S3 정적 웹 호스팅: HTML, CSS, JavaScript 파일과 같은 정적 콘텐츠를 호스팅하여 사용자에게 빠르고 안정적으로 웹사이트를 제공합니다.
+
+### 서버리스 아키텍처
+서버리스 아키텍처를 사용하여 확장성과 유연성을 높혔습니다.
+
+![architecture](https://github.com/user-attachments/assets/c332b7d0-d2d3-4b87-8873-ddc28a9acff8)
+
+주요 구성 요소는 다음과 같습니다:
+
+- Amazon API Gateway: 사용자의 요청을 받아 AWS Lambda 함수로 라우팅합니다.
+- AWS Lambda: 서버를 프로비저닝하거나 관리할 필요 없이 코드를 실행할 수 있는 서버리스 컴퓨팅 서비스입니다.
+- Amazon S3: 사용자 정보, AI 정보, 채팅 히스토리 등의 데이터를 저장합니다.
+
+애플리케이션의 로직은 크게 4가지 Lambda 함수로 구성됩니다:
+
+- Chat 함수: 사용자의 채팅 요청을 처리하여 실시간 응답을 제공합니다. S3에서 사용자 정보와 AI 정보, 채팅 히스토리를 읽어와 실시간 대화를 가능하게 합니다.
+- Image Generate 함수: 사용자의 이미지 생성 요청을 처리하여 이미지를 생성하고 결과를 반환합니다.
+- Summary 함수: 사용자 정보를 기반으로 파운데이션 모델이 사용자에 대한 요약 정보를 제공합니다.
+- Update Info 함수: 사용자가 정보를 업데이트하면 이를 처리하여 최신 정보를 S3에 저장합니다.
+
+### 생성형 AI
+Amazon Bedrock와 AI 모델을 활용하여 다양한 기능을 제공합니다.
+
+![architecture](https://github.com/user-attachments/assets/6d1fee20-1f95-40f9-8c8b-f1213c5d1b68)
+
+- AI 이미지 생성: Stability AI의 Stable Diffusion XL 모델을 사용하여 사용자 입력 텍스트에 맞는 이미지를 생성합니다.
+- 자연어 처리: Claude 3.5 Sonnet 모델 기반으로 채팅, 요약 등의 기능을 제공하여 사용자와 자연스러운 대화가 가능합니다.
+
+
+## Lambda 함수 호출
+
+
+## 시작하기
+
+### AWS CDK 설정
 [Getting started with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
 ```
@@ -8,22 +60,23 @@ cdk --version
 cdk bootstrap aws://123456789012/us-east-1
 ```
 
-# CDK로 배포 하기
+### CDK로 배포 하기
 ```
 cd cdk-my-ai-friend
 npm i aws-cdk-lib
 cdk deploy
 ```
 
-# Lambda Layer 설정
-[Working with layers for Python Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html)
+## (Optional) Lambda Layer 설정
+애플리케이션 코드에 포함되어 있기 때문에 필수로 수행해야 하는 단계는 아닙니다.
+참고: [Working with layers for Python Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html)
 
-## Lambda Layer 패키지 만들기
+### 패키지 만들기
 ```
 cd package-layer
 ```
 
-### (Optional) 기존 파일이 있는 경우 삭제
+### 기존 파일이 있는 경우 삭제
 ```
 rm -rf layer_venv
 rm -rf python
@@ -40,3 +93,11 @@ mkdir python
 cp -r layer_venv/lib python/
 zip -r package-layer.zip python
 ```
+
+## Contribution
+
+**김기철 (Kichul Kim)**
+- E-mail: hi.jigoo@gmail.com
+- LinkedIn: https://www.linkedin.com/in/kichul-kim-4bb293135/
+
+**최지선( Kichul Kim)**
