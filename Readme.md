@@ -1,16 +1,18 @@
 # 나만의 AI 친구 만들기
 
-----
-## Application
+사용자가 자신만의 AI 캐릭터를 만들어 다양한 주제로 대화할 수 있는 애플리케이션입니다. 
 
-사용자가 자신만의 AI 캐릭터를 만들어 다양한 주제로 대화할 수 있는 애플리케이션입니다. 사용자는 AI의 외형, 성격, 특징 등을 자유롭게 설정할 수 있으며, AI는 사용자의 관심사와 선호도를 반영하여 개인화된 대화를 제공합니다. 또한 다양한 AI 캐릭터를 생성하고 설정을 변경할 수 있어 창의적인 상호작용이 가능합니다.
+----
+## 1. Application
+
+사용자는 AI의 외형, 성격, 특징 등을 자유롭게 설정할 수 있으며, AI는 사용자의 관심사와 선호도를 반영하여 개인화된 대화를 제공합니다. 또한 다양한 AI 캐릭터를 생성하고 설정을 변경할 수 있어 창의적인 상호작용이 가능합니다.
 
 ![product-screenshot](https://github.com/user-attachments/assets/78610593-f1df-48ae-83f1-a27fc67969b1)
 ![product-screenshot](https://github.com/user-attachments/assets/49a84352-63bc-4f8e-85de-d8044348d63d)
 
-## Architecture
+## 2. Architecture
 
-### 정적 웹호스팅 & 데이터 관리
+### 2.1. 정적 웹호스팅 & 데이터 관리
 사용자는 Amazon API Gateway를 통해 Amazon S3에서 호스팅되는 웹사이트에 접근할 수 있습니다.
 
 ![architecture](https://github.com/user-attachments/assets/500f6602-9c8a-4558-ac40-1b72e790e8d4)
@@ -18,7 +20,7 @@
 - Amazon API Gateway: 개발자가 API를 생성, 배포, 유지 관리할 수 있는 완전 관리형 서비스입니다. 백엔드 서비스와의 통신을 쉽게 설정하고, 트래픽 관리, 인증 및 권한 부여, 모니터링 등의 기능을 제공합니다.
 - Amazon S3 정적 웹 호스팅: HTML, CSS, JavaScript 파일과 같은 정적 콘텐츠를 호스팅하여 사용자에게 빠르고 안정적으로 웹사이트를 제공합니다.
 
-### 서버리스 아키텍처
+### 2.2. 서버리스 아키텍처
 서버리스 아키텍처를 사용하여 확장성과 유연성을 높혔습니다.
 
 ![architecture](https://github.com/user-attachments/assets/c332b7d0-d2d3-4b87-8873-ddc28a9acff8)
@@ -36,7 +38,7 @@
 - Summary 함수: 사용자 정보를 기반으로 파운데이션 모델이 사용자에 대한 요약 정보를 제공합니다.
 - Update Info 함수: 사용자가 정보를 업데이트하면 이를 처리하여 최신 정보를 S3에 저장합니다.
 
-### 생성형 AI
+### 2.3. 생성형 AI
 Amazon Bedrock와 AI 모델을 활용하여 다양한 기능을 제공합니다.
 
 ![architecture](https://github.com/user-attachments/assets/6d1fee20-1f95-40f9-8c8b-f1213c5d1b68)
@@ -45,12 +47,35 @@ Amazon Bedrock와 AI 모델을 활용하여 다양한 기능을 제공합니다.
 - 자연어 처리: Claude 3.5 Sonnet 모델 기반으로 채팅, 요약 등의 기능을 제공하여 사용자와 자연스러운 대화가 가능합니다.
 
 
-## Lambda 함수 호출
+## 3. Lambda 함수 호출 흐름
+
+## 3.1. Update Info
+
+사용자와 AI 의 정보를 업데이트합니다.
+
+![sequence-diagram](https://github.com/user-attachments/assets/e7df12dc-258e-4cae-a5a8-f418ce67073f)
+
+## 3.2. Generate Image
+
+AI 의 이미지를 생성합니다.
+
+![sequence-diagram](https://github.com/user-attachments/assets/56bd2326-cf51-498b-bc5d-384c97530b91)
+
+## 3.3. Summary
+사용자와 AI 정보 요약하기. 요약정보는 AI의 첫 대화 인사말로 사용됩니다.
+
+![sequence-diagram](https://github.com/user-attachments/assets/3c275694-a291-44b9-9b29-c839480bd0da)
+
+## 3.4. Chat
+
+AI 와 대화를 합니다.
+
+![sequence-diagram](https://github.com/user-attachments/assets/3f58053a-23d3-482c-8874-980728e30eb1)
 
 
-## 시작하기
+## 4. 시작하기
 
-### AWS CDK 설정
+### 4.1. AWS CDK 설정
 [Getting started with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
 ```
@@ -60,30 +85,30 @@ cdk --version
 cdk bootstrap aws://123456789012/us-east-1
 ```
 
-### CDK로 배포 하기
+### 4.2. CDK로 배포 하기
 ```
 cd cdk-my-ai-friend
 npm i aws-cdk-lib
 cdk deploy
 ```
 
-## (Optional) Lambda Layer 설정
+## 5. (Optional) Lambda Layer 설정
 애플리케이션 코드에 포함되어 있기 때문에 필수로 수행해야 하는 단계는 아닙니다.
 참고: [Working with layers for Python Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html)
 
-### 패키지 만들기
+### 5.1. 패키지 만들기
 ```
 cd package-layer
 ```
 
-### 기존 파일이 있는 경우 삭제
+### 5.2. 기존 파일이 있는 경우 삭제
 ```
 rm -rf layer_venv
 rm -rf python
 rm package-layer.zip
 ```
 
-### 새로 만들기
+### 5.3. 새로 만들기
 ```
 python3.11 -m venv layer_venv
 source layer_venv/bin/activate
@@ -94,10 +119,12 @@ cp -r layer_venv/lib python/
 zip -r package-layer.zip python
 ```
 
-## Contribution
+## 6. Contribution
 
 **김기철 (Kichul Kim)**
-- E-mail: hi.jigoo@gmail.com
+- E-mail: kichul@amazon.com (hi.jigoo@gmail.com)
 - LinkedIn: https://www.linkedin.com/in/kichul-kim-4bb293135/
 
-**최지선( Kichul Kim)**
+**최지선 (Jisun Choi)**
+- E-mail: jschoii@amazon.com (jisunn0130@gmail.com)
+- LinkedIn: https://www.linkedin.com/in/지선-최-5a8666a6/
