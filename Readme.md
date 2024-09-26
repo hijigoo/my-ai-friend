@@ -79,6 +79,7 @@ AI 와 대화를 합니다.
 Amazon Bedrock 콘솔로 이동하세요. 화면 왼쪽에서 아래로 스크롤하여 Model access를 선택합니다. 오른쪽에서 주황색 Manage model access 버튼을 선택후 사용 하려는 모델을 모두 Enabled 로 변경합니다.
 
 - Claude 3 Sonnet
+- Claude 3.5 Sonnet (선택)
     - Claude 3.5 Sonnet 모델 사용시 [cdk-my-ai-friend-stack.ts](https://github.com/hijigoo/my-ai-friend/blob/main/cdk-my-ai-friend/lib/cdk-my-ai-friend-stack.ts) 에서 modelId 를 변경해주시면 됩니다.
 - Stable Diffusion XL
 
