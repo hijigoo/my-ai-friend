@@ -75,7 +75,16 @@ AI 와 대화를 합니다.
 
 ## 4. 시작하기
 
-### 4.1. AWS CDK 설정
+### 4.1. Amazon Bedrock Model 활성화하기
+Amazon Bedrock 콘솔로 이동하세요. 화면 왼쪽에서 아래로 스크롤하여 Model access를 선택합니다. 오른쪽에서 주황색 Manage model access 버튼을 선택후 사용 하려는 모델을 모두 Enabled 로 변경합니다.
+
+- Claude 3 Sonnet
+- Stable Diffusion XL
+
+![image](https://github.com/user-attachments/assets/4e5b6294-1771-495f-a174-64125b9cd8aa)
+
+
+### 4.2. AWS CDK 설정
 [Getting started with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
 ```
@@ -85,7 +94,7 @@ cdk --version
 cdk bootstrap aws://123456789012/us-east-1
 ```
 
-### 4.2. CDK로 배포 하기
+### 4.3. CDK로 배포 하기
 ```
 cd cdk-my-ai-friend
 npm i aws-cdk-lib
