@@ -11,6 +11,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 const stage = 'default';
 const projectName = 'my-ai-friend';
 
+// const modelId = "anthropic.claude-3-5-sonnet-20240620-v1:0"
 const modelId = "anthropic.claude-3-sonnet-20240229-v1:0"
 const imageModelId = "stability.stable-diffusion-xl-v1"
 
